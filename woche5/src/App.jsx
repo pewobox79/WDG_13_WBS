@@ -1,17 +1,9 @@
 import './App.css'
-import Timer from './components/Timer.jsx'
-import ToDoListReview from './components/ToDoListReview'
-import AboutMe from './pages/aboutme'
+import Fetching from './pages/fetching'
 
 function App() {
 
-  return (
-    <>
-    <AboutMe/>
-    </>
-  )
-    
-      
+  return <Fetching />
 
 }
 export default App
