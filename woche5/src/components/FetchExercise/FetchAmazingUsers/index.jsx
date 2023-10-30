@@ -1,23 +1,28 @@
 import { useEffect, useState } from "react";
 import UserItem from "./UserItem";
+import UserList from "./UserList";
+import { useParams, Link } from "react-router-dom";
 
-export default function FetchAmazingUsers(){
+export default function FetchAmazingUsers() {
 
+    const {auto} = useParams()
+console.log("params", auto)
     // adresse festlegen - in GRO?BUCHSTABEN soll nicht verändert werden
-    const URL = 'https://randomuser.me/api/?results=10';
+    const URL = 'https://hn.algolia.com/api/v1/search';
 
     // speicherort der gezogenen daten 
     const [users, setUsers] = useState([]);
+    const [authors, setAuthors] = useState([])
     const [missingData, setMissingData] = useState(false); //hebel für fehlermeldungen
-    const [isLoading, setIsLoading] =useState(false)
-    
-    
-    useEffect(()=>{
+    const [isLoading, setIsLoading] = useState(false)
+
+
+    useEffect(() => {
 
         setIsLoading(true) //erst mal ladestatus aktivieren
 
         //simulation von server verzögerung - weil langsamer server oder zu viele anfragen
-        setTimeout(()=>{
+        setTimeout(() => {
 
             //vanilla JS für Fetch API
             fetch(URL)
@@ -31,35 +36,27 @@ export default function FetchAmazingUsers(){
 
                 })
                 .then(data => {
-                    
-                    setUsers(data.results);
+
+                    setUsers(data.hits);
                     setIsLoading(false);
-                
+
                 })
                 .catch(error => console.log("domain fehler", error))
 
-        }, 8000)
+        }, 500)
+
+
+
+    }, [])
+
+
+    console.log("alle daten", users);
+
+    const ArticleList = users.map((item) => {
         
-        
-            
-    },[])
-    
-    console.log(users);
-    console.log("missingdata", missingData)
-
-    //Erstellen der UserItem
-    const ListOfUsers = users?.map((user)=>{
-
-        return <UserItem 
-            key={user.login.uuid} 
-            picture={user.picture.medium}
-            name={user.name}
-            email={user.email}
-            />
-
+        return <div key={item.story_id}><p>
+            <Link to={`${item.author}`}>{item.author}</Link></p>
+            </div>
     })
-
-    return <>
-    {missingData ? <div>keine daten vorhanden</div> : ListOfUsers}
-    {isLoading ? <div>daten werden geladen...</div>: ListOfUsers}</>
+    return <>{ArticleList}</>
 }
