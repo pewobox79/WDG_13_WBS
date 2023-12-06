@@ -5,5 +5,5 @@ name: String,
 description: String
 })
 
-const product = mongoose.model("product", ProductSchema)
-export default product
+const Product = mongoose.model("product", ProductSchema)
+export default Product
